@@ -12,12 +12,12 @@ This document provides details about the backend API for todo-app-backend. The A
 ### CRUD Operations
 
 - **GET /{username}**
-    - Return all todo-list items ordered by due dates
+    - Return all tasks ordered by due dates
 
 - **GET /{username}/create**
-    - Return a the create todo-list item page
+    - Return a the create task page
 
 - **POST /{username}/create**
-    - Submit the written todo-list item
+    - Submit the written task
     - return to "/{username}"
 
