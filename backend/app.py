@@ -1,8 +1,9 @@
 import os
 import psycopg2
-from flask import Flask, render_template, request, url_for, redirect, jsonify
+from flask import Flask, render_template, request, url_for, redirect, jsonify, flash
 
 app = Flask(__name__)
+app.secret_key = os.environ.get("SECRET_KEY", "dev")
 
 def get_db_connection():
     conn = psycopg2.connect(host='localhost',
@@ -18,13 +19,10 @@ def index():
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute(f'SELECT * FROM tasks WHERE user_id = {FAKE_USER_ID};')
-    colnames = [desc[0] for desc in cur.description]
-    # Result: ['task_id', 'user_id', 'title', 'notes', 'due_date', 'date_added']
-    tasks = [dict(zip(colnames, row)) for row in cur.fetchall()]
+    tasks = cur.fetchall()
     cur.close()
     conn.close()
-    
-    return jsonify(tasks)
+    return render_template('index.html', tasks = tasks)
 
 @app.route('/create/', methods=('GET', 'POST'))
 def create():
@@ -34,7 +32,8 @@ def create():
         due_date = request.form.get('due_date')
 
         if not title:
-            return jsonify({"error": "Title is required"}), 400
+            flash("Title is required")
+            return render_template('create.html')
 
         conn = get_db_connection()
         cur = conn.cursor()
@@ -44,6 +43,7 @@ def create():
         conn.commit()
         cur.close()
         conn.close()
+        flash(f"{title} added!")
         return redirect(url_for('index'))
     
-    return jsonify({"message": "Send a POST request to create a task."}), 200
+    return render_template('create.html')

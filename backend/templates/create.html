@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} Add a New Task {% endblock %}</h1>
+    <form method="post">
+        <p>
+            <label for="title">Title</label>
+            <input type="text" name="title"
+                   placeholder="Task title">
+            </input>
+        </p>
+
+        <p>
+            <label for="due_date">Due Date</label>
+            <input type="text" name="due_date"
+                   placeholder="YYYY-MM-DD">
+            </input>
+        </p>
+
+        <p>
+        <label for="notes">Notes</label>
+        <br>
+        <textarea name="notes"
+                  placeholder="notes"
+                  rows="15"
+                  cols="60"
+                  ></textarea>
+        </p>
+        <p>
+            <button type="submit">Submit</button>
+        </p>
+    </form>
+{% endblock %}
