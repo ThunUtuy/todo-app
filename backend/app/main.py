@@ -1,6 +1,7 @@
 import os
 import psycopg2
 from flask import Flask, render_template, request, url_for, redirect, jsonify, Blueprint
+from flask_login import login_required, current_user
 
 #app = Flask(__name__)
 #app.secret_key = os.environ.get("SECRET_KEY", "dev")
@@ -17,15 +18,21 @@ def get_db_connection():
 FAKE_USER_ID = 1
 
 @main.route('/')
+def start():
+    return redirect(url_for("auth.login"))
+
+@main.route('/index')
+@login_required
 def index():
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute(f'SELECT * FROM tasks WHERE user_id = {FAKE_USER_ID};')
+    cur.execute(f'SELECT * FROM tasks WHERE user_id = {current_user.user_id};')
     tasks = cur.fetchall()
     cur.close()
     conn.close()
-    return render_template('index.html', tasks = tasks)
+    return render_template('index.html', tasks = tasks, name=(current_user.username).capitalize())
 
+@login_required
 @main.route('/create/', methods=('GET', 'POST'))
 def create():
     if request.method == 'POST':
@@ -40,7 +47,7 @@ def create():
         cur = conn.cursor()
         cur.execute('INSERT INTO tasks (user_id, title, notes, due_date)'
                     'VALUES (%s, %s, %s, %s)',
-                    (FAKE_USER_ID, title, notes, due_date))
+                    (current_user.user_id, title, notes, due_date))
         conn.commit()
         cur.close()
         conn.close()

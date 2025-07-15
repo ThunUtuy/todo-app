@@ -26,9 +26,21 @@
 </head>
 <body>
     <nav>
+        {% if current_user.is_authenticated %}
         <a href="{{ url_for('main.index') }}">To-Do App</a>
+        {% endif %}
+        {% if current_user.is_authenticated %}
         <a href="{{ url_for('main.create') }}">Create</a>
-        <a href="#">About</a>
+        {% endif %}
+        {% if not current_user.is_authenticated %}
+        <a href="{{ url_for('auth.login') }}">Login</a>
+        {% endif %}
+        {% if not current_user.is_authenticated %}
+        <a href="{{ url_for('auth.signup') }}">Sign Up</a>
+        {% endif %}
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('auth.logout') }}">Logout</a>
+        {% endif %}
     </nav>
     <hr>
     <div class="content">
