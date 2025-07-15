@@ -17,6 +17,7 @@ cur.execute('DROP TABLE IF EXISTS users;')
 cur.execute('CREATE TABLE users (user_id serial PRIMARY KEY,'
                                  'first_name varchar (50) NOT NULL,'
                                  'last_name varchar (50) NOT NULL,'
+                                 'password varchar (128) NOT NULL,'
                                  'date_added date DEFAULT CURRENT_TIMESTAMP);'
                                  )
 

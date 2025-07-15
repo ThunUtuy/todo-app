@@ -1,9 +1,11 @@
 import os
 import psycopg2
-from flask import Flask, render_template, request, url_for, redirect, jsonify, flash
+from flask import Flask, render_template, request, url_for, redirect, jsonify, Blueprint
 
-app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "dev")
+#app = Flask(__name__)
+#app.secret_key = os.environ.get("SECRET_KEY", "dev")
+
+main = Blueprint('main', __name__)
 
 def get_db_connection():
     conn = psycopg2.connect(host='localhost',
@@ -14,7 +16,7 @@ def get_db_connection():
 
 FAKE_USER_ID = 1
 
-@app.route('/')
+@main.route('/')
 def index():
     conn = get_db_connection()
     cur = conn.cursor()
@@ -24,7 +26,7 @@ def index():
     conn.close()
     return render_template('index.html', tasks = tasks)
 
-@app.route('/create/', methods=('GET', 'POST'))
+@main.route('/create/', methods=('GET', 'POST'))
 def create():
     if request.method == 'POST':
         title = request.form.get('title')
@@ -32,7 +34,6 @@ def create():
         due_date = request.form.get('due_date')
 
         if not title:
-            flash("Title is required")
             return render_template('create.html')
 
         conn = get_db_connection()
@@ -43,7 +44,6 @@ def create():
         conn.commit()
         cur.close()
         conn.close()
-        flash(f"{title} added!")
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
     
     return render_template('create.html')
