@@ -13,15 +13,15 @@ conn = psycopg2.connect(
 cur = conn.cursor()
 
 # Execute a command: this creates a new table
+cur.execute('DROP TABLE IF EXISTS tasks;')
 cur.execute('DROP TABLE IF EXISTS users;')
 cur.execute('CREATE TABLE users (user_id serial PRIMARY KEY,'
-                                 'first_name varchar (50) NOT NULL,'
-                                 'last_name varchar (50) NOT NULL,'
+                                 'username varchar (100) NOT NULL,'
                                  'password varchar (128) NOT NULL,'
                                  'date_added date DEFAULT CURRENT_TIMESTAMP);'
                                  )
 
-cur.execute('DROP TABLE IF EXISTS tasks;')
+
 cur.execute('CREATE TABLE tasks (task_id serial PRIMARY KEY,'
                                  'user_id integer NOT NULL,'
                                  'title varchar (50) NOT NULL,'
