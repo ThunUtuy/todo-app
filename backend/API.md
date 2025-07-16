@@ -7,17 +7,30 @@ This document provides details about the backend API for todo-app-backend. The A
 ## Endpoints
 
 ### Authentication
+- **GET /login**
+    - Redirect to login page
 
+- **POST /login**
+    - Try to login with the written username and password
+
+- **GET /signup**
+    - Redirect to signup page
+
+- **POST /signup**
+    - Attempt to signup with the written username and password
+
+- **GET /logout**
+    - Logout
 
 ### CRUD Operations
 
-- **GET /{username}**
+- **GET /index**
     - Return all tasks ordered by due dates
 
-- **GET /{username}/create**
+- **GET /create**
     - Return a the create task page
 
-- **POST /{username}/create**
+- **POST /create**
     - Submit the written task
     - return to "/{username}"
 
