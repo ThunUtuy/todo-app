@@ -33,7 +33,7 @@ def index():
     return render_template('index.html', tasks = tasks, name=(current_user.username).capitalize())
 
 @login_required
-@main.route('/create/', methods=('GET', 'POST'))
+@main.route('/create', methods=('GET', 'POST'))
 def create():
     if request.method == 'POST':
         title = request.form.get('title')
@@ -54,3 +54,43 @@ def create():
         return redirect(url_for('main.index'))
     
     return render_template('create.html')
+
+@login_required
+@main.route('/delete', methods=('GET', 'POST'))
+def delete():
+    if request.method == 'POST':
+        task_id = request.form.get('task_id')
+        print(f"task_id received: {task_id}")
+
+        if not task_id:
+            return render_template('delete.html')
+        
+        #delete all tasks
+        if task_id == '-1':
+            conn = get_db_connection()
+            cur = conn.cursor()
+            cur.execute('DELETE FROM tasks WHERE user_id = %s', 
+                        (current_user.user_id,))
+            conn.commit()
+            cur.close()
+            conn.close()
+            return redirect(url_for('main.delete'))
+
+
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute('DELETE FROM tasks WHERE user_id = %s AND task_id = %s', 
+                    (current_user.user_id, task_id))
+        conn.commit()
+        cur.close()
+        conn.close()
+        return redirect(url_for('main.delete'))
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute(f'SELECT * FROM tasks WHERE user_id = {current_user.user_id};')
+    tasks = cur.fetchall()
+    cur.close()
+    conn.close()
+    
+    return render_template('delete.html', tasks = tasks, name=(current_user.username).capitalize())

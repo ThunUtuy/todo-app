@@ -39,6 +39,9 @@
         <a href="{{ url_for('auth.signup') }}">Sign Up</a>
         {% endif %}
         {% if current_user.is_authenticated %}
+        <a href="{{ url_for('main.delete') }}">Delete</a>
+        {% endif %}
+        {% if current_user.is_authenticated %}
         <a href="{{ url_for('auth.logout') }}">Logout</a>
         {% endif %}
     </nav>

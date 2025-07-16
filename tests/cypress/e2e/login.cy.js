@@ -1,4 +1,5 @@
 describe('Loggin In', () => {
+  //sign up with a test user first
   beforeEach(()=> {
     cy.request({
       method: 'POST',
@@ -11,7 +12,6 @@ describe('Loggin In', () => {
     })
 
   })
-
 
   it('Load the login page', function (){
     const username = 'testuser'

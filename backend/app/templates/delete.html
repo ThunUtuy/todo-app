@@ -2,6 +2,17 @@
 
 {% block content %}
     <h1>{% block title %} {{name}}'s' Tasks {% endblock %}</h1>
+    <form method="post">
+        <p>
+            <label for="task_id">Delete Task</label>
+            <input type="number" name="task_id"
+                   placeholder="ID (e.g. 3, or -1 for all)">
+            </input>
+        </p>
+        <p>
+            <button type="submit">Submit</button>
+        </p>
+    </form>
     {% for task in tasks %}
         <div class='tasks'>
             <h3>{{ task[0] }} - {{ task[2] }}</h3>
