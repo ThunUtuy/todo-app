@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 conn = psycopg2.connect(
-        host="localhost",
+        host="db",
         database="todo_db",
         user=os.environ.get('DB_USERNAME'),
         password=os.environ.get('DB_PASSWORD'))

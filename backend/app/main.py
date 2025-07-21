@@ -9,7 +9,7 @@ from flask_login import login_required, current_user
 main = Blueprint('main', __name__)
 
 def get_db_connection():
-    conn = psycopg2.connect(host='localhost',
+    conn = psycopg2.connect(host='db',
                             database='todo_db',
                             user=os.environ.get('DB_USERNAME'),
                             password=os.environ.get('DB_PASSWORD'))

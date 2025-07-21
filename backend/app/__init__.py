@@ -12,7 +12,7 @@ def create_app():
     app = Flask(__name__)
 
     app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", "dev")
-    app.config['SQLALCHEMY_DATABASE_URI'] = (f"postgresql://{os.environ.get('DB_USERNAME')}:{os.environ.get('DB_PASSWORD')}" "@localhost/todo_db")
+    app.config['SQLALCHEMY_DATABASE_URI'] = (f"postgresql://{os.environ.get('DB_USERNAME')}:{os.environ.get('DB_PASSWORD')}" "@db/todo_db")
 
     db.init_app(app)
 
