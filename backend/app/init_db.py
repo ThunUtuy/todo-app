@@ -1,6 +1,7 @@
 import os
 import psycopg2
 from dotenv import load_dotenv
+from werkzeug.security import generate_password_hash
 load_dotenv()
 
 conn = psycopg2.connect(
@@ -30,6 +31,8 @@ cur.execute('CREATE TABLE tasks (task_id serial PRIMARY KEY,'
                                  'date_added date DEFAULT CURRENT_TIMESTAMP,'
                                  'CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(user_id));'
                                  )
+
+cur.execute("INSERT INTO users (username, password) VALUES(%s,%s)", ('testuser', f'{generate_password_hash('test1234', method='pbkdf2:sha256')}'))
 
 conn.commit()
 

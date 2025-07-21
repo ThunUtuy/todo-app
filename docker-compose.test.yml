@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  cypress:
+    image: cypress/included:12.17.4
+    depends_on:
+      - backend
+    environment:
+      - CYPRESS_baseUrl=http://backend:5000
+    volumes:
+      - ./tests:/cypress
+    working_dir: /cypress
+    command: ["cypress", "run"]

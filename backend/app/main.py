@@ -26,7 +26,7 @@ def start():
 def index():
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute(f'SELECT * FROM tasks WHERE user_id = {current_user.user_id};')
+    cur.execute(f'SELECT * FROM tasks WHERE user_id = {current_user.user_id} ORDER BY  due_date ASC;')
     tasks = cur.fetchall()
     cur.close()
     conn.close()
