@@ -7,4 +7,6 @@ How to run
     - docker compose up --build
 - Create database
     - docker-compose exec backend python app/init_db.py
-    
+- Test
+    - npm run test:e2e
+
