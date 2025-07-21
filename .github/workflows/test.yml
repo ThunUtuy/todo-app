@@ -52,10 +52,10 @@ jobs:
 
       - name: Install Cypress dependencies
         run: |
-          cd test
+          cd tests
           npm install
 
       - name: Run Cypress tests
         run: |
-          cd test
+          cd tests
           npx cypress run
