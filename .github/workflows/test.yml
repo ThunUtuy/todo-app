@@ -27,37 +27,17 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+      - name: Set up Docker Compose
+        run: docker-compose up -d --build
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.12"
+      - name: Wait for backend to be ready
+        run: sleep 10  # or healthcheck + wait-for-it.sh
 
-      - name: Install backend dependencies
-        run: |
-          cd backend
-          pip install -r requirements.txt
+      - name: Init DB
+        run: docker-compose exec backend python app/init_db.py
 
-      - name: Start Flask server (background)
-        run: |
-          cd backend
-          nohup flask run --host=0.0.0.0 &
-
-      - name: Wait for Flask to start
-        run: sleep 10
-
-      - name: Install dependencies
-        working-directory: tests
-        run: npm ci
-
-      - name: Fix Cypress permissions
-        working-directory: tests
-        run: chmod +x ./node_modules/.bin/cypress
-
-      - name: Run Cypress tests
-        working-directory: tests
+      - name: Run Cypress Tests
         run: npm run cy:run
+
+      - name: run cypress
+        run: npm run test:e2e
