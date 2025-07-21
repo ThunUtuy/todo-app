@@ -1,25 +1,61 @@
-name: Hello GitHub Actions
+name: Run Cypress Tests
 
 on:
-  push:
-    branches: [ main ]
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  custom-hello:
+  cypress-tests:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: 2004THun
+          POSTGRES_DB: todo_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Say Hello
-        run: echo "👋 Hello again from GitHub Actions!"
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
-      - name: Show Date and Time
-        run: date
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
 
-      - name: Show Branch Name
-        run: 'echo "Branch: ${{ github.ref_name }}"'
+      - name: Install backend dependencies
+        run: |
+          cd backend
+          pip install -r requirements.txt
 
-      - name: List all files
-        run: ls -la
+      - name: Start Flask server (background)
+        run: |
+          cd backend
+          nohup flask run --host=0.0.0.0 &
+
+      - name: Wait for Flask to start
+        run: sleep 10
+
+      - name: Install Cypress dependencies
+        run: |
+          cd test
+          npm install
+
+      - name: Run Cypress tests
+        run: |
+          cd test
+          npx cypress run
