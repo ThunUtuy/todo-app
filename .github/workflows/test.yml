@@ -51,7 +51,7 @@ jobs:
       - name: Run Cypress tests
         uses: cypress-io/github-action@v6
         with:
-          start: npm run dev
-          wait-on: http://localhost:3000  # adjust based on your frontend port
+          start: npm run cy:run
+          wait-on: http://localhost:5000  # adjust based on your frontend port
           wait-on-timeout: 60
 
