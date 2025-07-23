@@ -17,7 +17,7 @@ jobs:
           POSTGRES_PASSWORD: 2004THun
           POSTGRES_DB: todo_db
         ports:
-          - 5432:5432
+          - 5433:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -32,30 +32,28 @@ jobs:
         with:
           node-version: 18
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.12"
+      - name: Install dependencies
+        run: npm install
 
-      - name: Install backend dependencies
+      - name: Set up Docker Compose
+        run: docker compose up -d --build
+
+      - name: Wait for backend to be ready
         run: |
-          cd backend
-          pip install -r requirements.txt
+          echo "Waiting for backend..."
+          until curl -s http://localhost:5000/health; do
+            sleep 2
+          done
 
-      - name: Start Flask server (background)
-        run: |
-          cd backend
-          nohup flask run --host=0.0.0.0 &
-
-      - name: Wait for Flask to start
-        run: sleep 10
-
-      - name: Install Cypress dependencies
-        run: |
-          cd test
-          npm install
+      - name: Init DB
+        run: docker compose exec -T backend python app/init_db.py
 
       - name: Run Cypress tests
-        run: |
-          cd test
-          npx cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: tests
+          install: true
+          start: npm run cy:run
+          wait-on: http://localhost:5000  # adjust based on your frontend port
+          wait-on-timeout: 60
+
