@@ -27,17 +27,31 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
       - name: Set up Docker Compose
         run: docker compose up -d --build
 
       - name: Wait for backend to be ready
-        run: sleep 10  # or healthcheck + wait-for-it.sh
+        run: |
+          echo "Waiting for backend..."
+          until curl -s http://localhost:5000/health; do
+            sleep 2
+          done
 
       - name: Init DB
-        run: docker compose exec backend python app/init_db.py
+        run: docker compose exec -T backend python app/init_db.py
 
-      - name: Run Cypress Tests
-        run: npm run cy:run
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm run dev
+          wait-on: http://localhost:3000  # adjust based on your frontend port
+          wait-on-timeout: 60
 
-      - name: run cypress
-        run: npm run test:e2e
