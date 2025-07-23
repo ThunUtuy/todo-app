@@ -89,8 +89,8 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: ./  # or ./backend depending on where your Dockerfile is
-          file: ./Dockerfile  # or ./backend/Dockerfile
+          context: ./backend  # or ./backend depending on where your Dockerfile is
+          file: ./backend/Dockerfile  # or ./backend/Dockerfile
           push: true
           tags: |
             ghcr.io/${{ env.OWNER_LC }}/todo-app:latest
