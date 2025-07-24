@@ -86,9 +86,10 @@ jobs:
       - name: Set lowercase image owner
         run: echo "OWNER_LC=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
-      - name: Debug: print image tag
+      - name: "Debug: print image tag"
         run: |
-          echo "OWNER_LC: $OWNER_LC"
+          echo "OWNER_LC: "OWNER_LC: ${{ env.OWNER_LC }}"
+
           echo "Final image tag 1: ghcr.io/$OWNER_LC/todo-app:latest"
           echo "Final image tag 2: ghcr.io/$OWNER_LC/todo-app:${{ env.IMAGE_TAG }}"
 
