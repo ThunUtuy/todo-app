@@ -89,6 +89,7 @@ jobs:
       - name: "Debug: print image tag"
         run: |
           echo "OWNER_LC: "OWNER_LC: ${{ env.OWNER_LC }}"
+
           echo "Final image tag 1: ghcr.io/$OWNER_LC/todo-app:latest"
           echo "Final image tag 2: ghcr.io/$OWNER_LC/todo-app:${{ env.IMAGE_TAG }}"
 
